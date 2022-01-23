@@ -1,4 +1,13 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
+import {
+  Headerform,
+  SearchForm,
+  SearchFormButton,
+  SearchFormButtonLabel,
+  SearchFormInput,
+} from './Searchbar.styled';
 
 export class Searchbar extends Component {
   state = {
@@ -21,13 +30,13 @@ export class Searchbar extends Component {
 
   render() {
     return (
-      <header>
-        <form onSubmit={this.handleSubmit}>
-          <button type="submit">
-            <span>Search</span>
-          </button>
+      <Headerform>
+        <SearchForm onSubmit={this.handleSubmit}>
+          <SearchFormButton type="submit">
+            <SearchFormButtonLabel>Search</SearchFormButtonLabel>
+          </SearchFormButton>
 
-          <input
+          <SearchFormInput
             type="text"
             autoComplete="off"
             autoFocus
@@ -35,8 +44,12 @@ export class Searchbar extends Component {
             onChange={this.handleQueryChange}
             value={this.state.query}
           />
-        </form>
-      </header>
+        </SearchForm>
+      </Headerform>
     );
   }
 }
+
+Searchbar.propTypes = {
+  onSubmit: PropTypes.func,
+};

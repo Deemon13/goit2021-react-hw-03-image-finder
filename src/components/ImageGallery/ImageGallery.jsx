@@ -1,7 +1,9 @@
-import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 import React, { Component } from 'react';
 
 import { fetchImagesWithQuery } from 'services/fetch-images';
+
+import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
+import { ImageGalleryList } from './ImageGallery.styled';
 
 export class ImageGallery extends Component {
   state = {
@@ -40,14 +42,14 @@ export class ImageGallery extends Component {
       <>
         {loading && <h1>Loading...</h1>}
         {!queryForRender && <div>Input image for search</div>}
-        <ul>
+        <ImageGalleryList>
           {images &&
             images.map(({ id, webformatURL, user }) => {
               return (
                 <ImageGalleryItem key={id} url={webformatURL} name={user} />
               );
             })}
-        </ul>
+        </ImageGalleryList>
       </>
     );
   }
