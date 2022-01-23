@@ -7,6 +7,8 @@ import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Modal } from './Modal/Modal';
 import { Button } from './Button/Button';
+import { Loader } from './Loader/Loader';
+import { Notification } from './Notification/Notification';
 
 export class App extends Component {
   state = {
@@ -62,18 +64,23 @@ export class App extends Component {
   };
 
   render() {
-    const { searchBarQuery, images, loading, showModal } = this.state;
+    const { searchBarQuery, images, loading, error, showModal } = this.state;
     return (
       <Layout>
         <Searchbar onSubmitSearch={this.handleSubmitSearchBar} />
+        {error && (
+          <Notification
+            message={`Whoops, something went wrong: ${error.message}`}
+          />
+        )}
 
-        {!searchBarQuery && <div>Input image for search</div>}
+        {!searchBarQuery && <Notification message="Input image for search" />}
 
         {images.length > 0 && (
           <ImageGallery images={images} onOpen={this.openModalImage} />
         )}
 
-        {loading && <h1>Loading...</h1>}
+        {loading && <Loader />}
 
         {showModal && (
           <Modal closeModal={this.closeModalImage}>

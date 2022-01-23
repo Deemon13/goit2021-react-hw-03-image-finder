@@ -7,6 +7,7 @@ import {
   SearchFormButton,
   SearchFormButtonLabel,
   SearchFormInput,
+  SeachImage,
 } from './Searchbar.styled';
 
 export class Searchbar extends Component {
@@ -33,6 +34,7 @@ export class Searchbar extends Component {
       <Headerform>
         <SearchForm onSubmit={this.handleSubmit}>
           <SearchFormButton type="submit">
+            <SeachImage />
             <SearchFormButtonLabel>Search</SearchFormButtonLabel>
           </SearchFormButton>
 
