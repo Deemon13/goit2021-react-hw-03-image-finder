@@ -6,10 +6,10 @@ import {
   ImageGalleryItemImage,
 } from './ImageGalleryItem.styled';
 
-export const ImageGalleryItem = ({ url, name }) => {
+export const ImageGalleryItem = ({ url, onImageClick, name }) => {
   return (
     <ImageGalleryListItem>
-      <ImageGalleryItemImage src={url} alt={name} />
+      <ImageGalleryItemImage src={url} alt={name} onClick={onImageClick} />
     </ImageGalleryListItem>
   );
 };
@@ -17,4 +17,5 @@ export const ImageGalleryItem = ({ url, name }) => {
 ImageGalleryItem.propTypes = {
   url: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
+  onImageClick: PropTypes.func.isRequired,
 };

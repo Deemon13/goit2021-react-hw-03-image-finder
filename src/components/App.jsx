@@ -5,6 +5,7 @@ import { fetchImagesWithQuery } from 'services/fetch-images';
 import { Layout } from './Layout/Layout';
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
+import { Modal } from './Modal/Modal';
 import { Button } from './Button/Button';
 
 export class App extends Component {
@@ -14,6 +15,7 @@ export class App extends Component {
     error: null,
     searchBarQuery: '',
     page: 1,
+    showModal: false,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -51,17 +53,33 @@ export class App extends Component {
     console.log(query);
   };
 
+  openModalImage = largeImage => {
+    this.setState({ showModal: largeImage });
+  };
+
+  closeModalImage = () => {
+    this.setState({ showModal: false });
+  };
+
   render() {
-    const { searchBarQuery, images, loading } = this.state;
+    const { searchBarQuery, images, loading, showModal } = this.state;
     return (
       <Layout>
         <Searchbar onSubmitSearch={this.handleSubmitSearchBar} />
 
         {!searchBarQuery && <div>Input image for search</div>}
 
-        {images.length > 0 && <ImageGallery images={images} />}
+        {images.length > 0 && (
+          <ImageGallery images={images} onOpen={this.openModalImage} />
+        )}
 
         {loading && <h1>Loading...</h1>}
+
+        {showModal && (
+          <Modal closeModal={this.closeModalImage}>
+            <img src={showModal} alt="" />
+          </Modal>
+        )}
 
         {images.length > 0 && !loading && (
           <Button onButtonClick={this.fetchImages}></Button>

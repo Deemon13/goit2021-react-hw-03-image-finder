@@ -4,12 +4,19 @@ import PropTypes from 'prop-types';
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 import { ImageGalleryList } from './ImageGallery.styled';
 
-export const ImageGallery = ({ images }) => {
+export const ImageGallery = ({ images, onOpen }) => {
   return (
     <>
       <ImageGalleryList>
-        {images.map(({ id, webformatURL, user }) => {
-          return <ImageGalleryItem key={id} url={webformatURL} name={user} />;
+        {images.map(({ id, webformatURL, largeImageURL, user }) => {
+          return (
+            <ImageGalleryItem
+              key={id}
+              url={webformatURL}
+              name={user}
+              onImageClick={() => onOpen(largeImageURL)}
+            />
+          );
         })}
       </ImageGalleryList>
     </>
