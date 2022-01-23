@@ -1,25 +1,72 @@
 import React, { Component } from 'react';
 
+import { fetchImagesWithQuery } from 'services/fetch-images';
+
+import { Layout } from './Layout/Layout';
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
+import { Button } from './Button/Button';
 
 export class App extends Component {
   state = {
+    images: [],
+    loading: false,
+    error: null,
     searchBarQuery: '',
+    page: 1,
+  };
+
+  componentDidUpdate(prevProps, prevState) {
+    const prevQuery = prevState.searchBarQuery;
+    const nextQuery = this.state.searchBarQuery;
+
+    if (prevQuery !== nextQuery) {
+      this.fetchImages();
+    }
+
+    if (!this.state.loading) {
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
+  }
+
+  fetchImages = () => {
+    const { searchBarQuery, page } = this.state;
+    this.setState({ loading: true });
+    fetchImagesWithQuery(searchBarQuery, page)
+      .then(images =>
+        this.setState(prevState => ({
+          images: [...prevState.images, ...images],
+          page: prevState.page + 1,
+        }))
+      )
+      .catch(error => this.setState({ error }))
+      .finally(() => this.setState({ loading: false }));
   };
 
   handleSubmitSearchBar = query => {
-    this.setState({ searchBarQuery: query });
+    this.setState({ searchBarQuery: query, page: 1, images: [] });
     console.log(query);
   };
 
   render() {
+    const { searchBarQuery, images, loading } = this.state;
     return (
-      <>
+      <Layout>
         <Searchbar onSubmitSearch={this.handleSubmitSearchBar} />
 
-        <ImageGallery queryForRender={this.state.searchBarQuery} />
-      </>
+        {!searchBarQuery && <div>Input image for search</div>}
+
+        {images.length > 0 && <ImageGallery images={images} />}
+
+        {loading && <h1>Loading...</h1>}
+
+        {images.length > 0 && !loading && (
+          <Button onButtonClick={this.fetchImages}></Button>
+        )}
+      </Layout>
     );
   }
 }

@@ -1,56 +1,27 @@
-import React, { Component } from 'react';
-
-import { fetchImagesWithQuery } from 'services/fetch-images';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 import { ImageGalleryList } from './ImageGallery.styled';
 
-export class ImageGallery extends Component {
-  state = {
-    images: [],
-    loading: false,
-    page: 1,
-    error: null,
-  };
+export const ImageGallery = ({ images }) => {
+  return (
+    <>
+      <ImageGalleryList>
+        {images.map(({ id, webformatURL, user }) => {
+          return <ImageGalleryItem key={id} url={webformatURL} name={user} />;
+        })}
+      </ImageGalleryList>
+    </>
+  );
+};
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.queryForRender !== this.props.queryForRender) {
-      this.setState({ page: 0, images: [] });
-      this.fetchImages();
-    }
-  }
-
-  fetchImages = () => {
-    const { queryForRender } = this.props;
-    const { page } = this.state;
-    this.setState({ loading: true });
-    fetchImagesWithQuery(queryForRender, page)
-      .then(images =>
-        this.setState(prevState => ({
-          images: [...prevState.images, ...images],
-          page: prevState.page + 1,
-        }))
-      )
-      .catch(error => this.setState({ error }))
-      .finally(() => this.setState({ loading: false }));
-  };
-
-  render() {
-    const { images, loading } = this.state;
-    const { queryForRender } = this.props;
-    return (
-      <>
-        {loading && <h1>Loading...</h1>}
-        {!queryForRender && <div>Input image for search</div>}
-        <ImageGalleryList>
-          {images &&
-            images.map(({ id, webformatURL, user }) => {
-              return (
-                <ImageGalleryItem key={id} url={webformatURL} name={user} />
-              );
-            })}
-        </ImageGalleryList>
-      </>
-    );
-  }
-}
+ImageGallery.propTypes = {
+  images: PropTypes.arrayOf(
+    PropTypes.shape({
+      webformatURL: PropTypes.string.isRequired,
+      user: PropTypes.string.isRequired,
+      id: PropTypes.number.isRequired,
+    })
+  ),
+};
